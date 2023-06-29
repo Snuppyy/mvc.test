@@ -26,6 +26,5 @@ class CreateUsersTable
    }
 }
 
-// Создание таблицы
 $table = new CreateUsersTable();
 $table->up();

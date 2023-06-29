@@ -1,44 +1,45 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
-
 class Session
 {
-   public $id;
-   public $user_id;
-   public $token;
+   private $db;
+   private $id;
 
-   public function save()
+   public function __construct()
    {
-      $conn = Database::getConnection();
+      $this->db = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
+      $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+   }
+
+   public function create($user_id, $token)
+   {
 
       if ($this->id) {
-         // Обновление существующей сессии
-         $stmt = $conn->prepare('UPDATE sessions SET user_id = ?, token = ? WHERE id = ?');
-         $stmt->execute([$this->user_id, $this->token, $this->id]);
+         $stmt = $this->db->prepare('UPDATE sessions SET user_id = ?, token = ? WHERE id = ?');
+         $stmt->execute([$user_id, $token, $this->id]);
       } else {
-         // Создание новой сессии
-         $stmt = $conn->prepare('INSERT INTO sessions (user_id, token) VALUES (?, ?)');
-         $stmt->execute([$this->user_id, $this->token]);
+         $stmt = $this->db->prepare('INSERT INTO sessions (user_id, token) VALUES (?, ?)');
+         $stmt->execute([$user_id, $token]);
 
-         // Установка идентификатора сессии
-         $this->id = $conn->lastInsertId();
+         $this->id = $this->db->lastInsertId();
       }
    }
 
    public static function deleteByToken($token)
    {
-      $conn = Database::getConnection();
+      $db = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
+      $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-      $stmt = $conn->prepare('DELETE FROM sessions WHERE token = ?');
+      $stmt = $db->prepare('DELETE FROM sessions WHERE token = ?');
       $stmt->execute([$token]);
    }
 
    public static function getByToken($id)
    {
-      $conn = Database::getConnection();
+      $db = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
+      $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-      $stmt = $conn->prepare('SELECT token FROM sessions WHERE user_id = ?');
+      $stmt = $db->prepare('SELECT token FROM sessions WHERE user_id = ?');
       $stmt->execute([$id]);
       $session = $stmt->fetch(PDO::FETCH_OBJ);
 

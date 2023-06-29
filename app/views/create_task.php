@@ -1,4 +1,4 @@
-<? require_once 'layouts/header.php'; ?>
+<? require 'layouts/header.php'; ?>
 
 <h1>Создать задачу</h1>
 <form method="post" action="/create">
@@ -17,4 +17,4 @@
    <button type="submit" class="btn btn-primary">Создать</button>
 </form>
 
-<? require_once 'layouts/footer.php'; ?>
+<? require 'layouts/footer.php'; ?>

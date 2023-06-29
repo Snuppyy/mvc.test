@@ -1,62 +1,54 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
-
 class User
 {
-   public $id;
-   public $login;
-   public $password;
+   private static $db;
+   private $id;
+
+
+   public function __construct()
+   {
+      $this->db = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
+      $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+   }
 
    public static function isLoggedIn()
    {
-      // Проверяем, есть ли информация о пользователе в сессии или в cookies
-      return isset($_COOKIE['session_token']) && isset($_COOKIE['user_id']);
+      return isset($_SESSION['session_token']) && isset($_SESSION['user_id']);
    }
 
-   public function save()
+   public function create($login, $password)
    {
-      $conn = Database::getConnection();
 
       if ($this->id) {
-         // Обновление существующего пользователя
-         $stmt = $conn->prepare('UPDATE users SET login = ?, password = ? WHERE id = ?');
-         $stmt->execute([$this->login, $this->password, $this->id]);
+         $stmt = $this->db->prepare('UPDATE users SET login = ?, password = ? WHERE id = ?');
+         $stmt->execute([$login, $password, $this->id]);
       } else {
-         // Создание нового пользователя
-         $stmt = $conn->prepare('INSERT INTO users (login, password) VALUES (?, ?)');
-         $stmt->execute([$this->login, $this->password]);
+         $stmt = $this->db->prepare('INSERT INTO users (login, password) VALUES (?, ?)');
+         $stmt->execute([$login, $password]);
 
-         // Установка идентификатора пользователя
-         $this->id = $conn->lastInsertId();
+         $this->id = $this->db->lastInsertId();
       }
    }
 
    public static function findByLogin($login)
    {
-      $conn = Database::getConnection();
+      $db = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
+      $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-      $stmt = $conn->prepare('SELECT * FROM users WHERE login = ?');
+      $stmt = $db->prepare('SELECT * FROM users WHERE login = ?');
       $stmt->execute([$login]);
       $user = $stmt->fetch(PDO::FETCH_OBJ);
 
-      if ($user) {
-         $model = new User();
-         $model->id = $user->id;
-         $model->login = $user->login;
-         $model->password = $user->password;
-
-         return $model;
-      }
-
-      return null;
+      return $user;
    }
 
    public static function findById($id)
    {
-      $conn = Database::getConnection();
+      $db = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
+      $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-      $stmt = $conn->prepare('SELECT * FROM users WHERE id = ?');
+      $stmt = $db->prepare('SELECT * FROM users WHERE id = ?');
       $stmt->execute([$id]);
       $user = $stmt->fetch(PDO::FETCH_OBJ);
 

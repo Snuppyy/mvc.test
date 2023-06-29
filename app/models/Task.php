@@ -1,58 +1,49 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
-
 class Task
 {
-   public $id;
-   public $username;
-   public $email;
-   public $task;
+   private $db;
 
-   public function save()
+   public function __construct()
    {
-      $conn = Database::getConnection();
-
-      if ($this->id) {
-         // Обновление существующей задачи
-         $stmt = $conn->prepare('UPDATE tasks SET username = ?, email = ?, task = ? WHERE id = ?');
-         $stmt->execute([$this->username, $this->email, $this->task, $this->id]);
-      } else {
-         // Создание новой задачи
-         $stmt = $conn->prepare('INSERT INTO tasks (username, email, task) VALUES (?, ?, ?)');
-         $stmt->execute([$this->username, $this->email, $this->task]);
-
-         // Установка идентификатора задачи
-         $this->id = $conn->lastInsertId();
-      }
+      $this->db = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
+      $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
    }
 
-   public static function getAllTasks()
+   public function create($name, $email, $task)
    {
-      $conn = Database::getConnection();
-
-      $stmt = $conn->query('SELECT * FROM tasks');
-      $tasks = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-      return $tasks;
+      $stmt = $this->db->prepare('INSERT INTO tasks (username, email, task) VALUES (?, ?, ?)');
+      $stmt->execute([$name, $email, $task]);
    }
 
-   public static function getTaskById($id)
+   public function getAllTasks()
    {
-      $conn = Database::getConnection();
+      $stmt = $this->db->query('SELECT * FROM tasks');
+      return $stmt->fetchAll(PDO::FETCH_ASSOC);
+   }
 
-      $stmt = $conn->prepare('SELECT * FROM tasks WHERE id = ?');
+   public function getTotalTaskCount()
+   {
+      $stmt = $this->db->query('SELECT COUNT(*) FROM tasks');
+      return $stmt->fetchColumn();
+   }
+
+   public function getById($id)
+   {
+      $stmt = $this->db->prepare('SELECT * FROM tasks WHERE id = ?');
       $stmt->execute([$id]);
-      $task = $stmt->fetch(PDO::FETCH_OBJ);
-
-      return $task;
+      return $stmt->fetch(PDO::FETCH_ASSOC);
    }
 
-   public function delete()
+   public function update($id, $username, $email, $task, $completed)
    {
-      $conn = Database::getConnection();
+      $stmt = $this->db->prepare('UPDATE tasks SET username = ?, email = ?, task = ?, completed = ? WHERE id = ?');
+      $stmt->execute([$username, $email, $task, $completed, $id]);
+   }
 
-      $stmt = $conn->prepare('DELETE FROM tasks WHERE id = ?');
-      $stmt->execute([$this->id]);
+   public function delete($id)
+   {
+      $stmt = $this->db->prepare('DELETE FROM tasks WHERE id = ?');
+      $stmt->execute([$id]);
    }
 }

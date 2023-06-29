@@ -4,77 +4,72 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit807e839aedf95c99449f9b42e21db027
+class ComposerStaticInit9927a9120c7e0f36852799e98d9397d7
 {
-    public static $files = array (
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
-    );
-
     public static $prefixLengthsPsr4 = array (
-        'S' => 
-        array (
-            'Symfony\\Polyfill\\Php80\\' => 23,
-            'Symfony\\Polyfill\\Mbstring\\' => 26,
-            'Symfony\\Polyfill\\Ctype\\' => 23,
-        ),
         'P' => 
         array (
-            'PhpOption\\' => 10,
-        ),
-        'G' => 
-        array (
-            'GrahamCampbell\\ResultType\\' => 26,
-        ),
-        'D' => 
-        array (
-            'Dotenv\\' => 7,
+            'Pagerfanta\\Twig\\' => 16,
+            'Pagerfanta\\Solarium\\' => 20,
+            'Pagerfanta\\Elastica\\' => 20,
+            'Pagerfanta\\Doctrine\\PHPCRODM\\' => 29,
+            'Pagerfanta\\Doctrine\\ORM\\' => 24,
+            'Pagerfanta\\Doctrine\\MongoDBODM\\' => 31,
+            'Pagerfanta\\Doctrine\\DBAL\\' => 25,
+            'Pagerfanta\\Doctrine\\Collections\\' => 32,
+            'Pagerfanta\\' => 11,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Symfony\\Polyfill\\Php80\\' => 
+        'Pagerfanta\\Twig\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
+            0 => __DIR__ . '/..' . '/pagerfanta/pagerfanta/lib/Twig',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'Pagerfanta\\Solarium\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+            0 => __DIR__ . '/..' . '/pagerfanta/pagerfanta/lib/Adapter/Solarium',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Pagerfanta\\Elastica\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+            0 => __DIR__ . '/..' . '/pagerfanta/pagerfanta/lib/Adapter/Elastica',
         ),
-        'PhpOption\\' => 
+        'Pagerfanta\\Doctrine\\PHPCRODM\\' => 
         array (
-            0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
+            0 => __DIR__ . '/..' . '/pagerfanta/pagerfanta/lib/Adapter/Doctrine/PHPCRODM',
         ),
-        'GrahamCampbell\\ResultType\\' => 
+        'Pagerfanta\\Doctrine\\ORM\\' => 
         array (
-            0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
+            0 => __DIR__ . '/..' . '/pagerfanta/pagerfanta/lib/Adapter/Doctrine/ORM',
         ),
-        'Dotenv\\' => 
+        'Pagerfanta\\Doctrine\\MongoDBODM\\' => 
         array (
-            0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
+            0 => __DIR__ . '/..' . '/pagerfanta/pagerfanta/lib/Adapter/Doctrine/MongoDBODM',
+        ),
+        'Pagerfanta\\Doctrine\\DBAL\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pagerfanta/pagerfanta/lib/Adapter/Doctrine/DBAL',
+        ),
+        'Pagerfanta\\Doctrine\\Collections\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pagerfanta/pagerfanta/lib/Adapter/Doctrine/Collections',
+        ),
+        'Pagerfanta\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pagerfanta/pagerfanta/lib/Core',
         ),
     );
 
     public static $classMap = array (
-        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
-        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
-        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
-        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit807e839aedf95c99449f9b42e21db027::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit807e839aedf95c99449f9b42e21db027::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit807e839aedf95c99449f9b42e21db027::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit9927a9120c7e0f36852799e98d9397d7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit9927a9120c7e0f36852799e98d9397d7::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit9927a9120c7e0f36852799e98d9397d7::$classMap;
 
         }, null, ClassLoader::class);
     }

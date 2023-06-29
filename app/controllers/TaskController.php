@@ -2,77 +2,83 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/app/models/Task.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/app/models/User.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\View\TwitterBootstrap5View;
 
 class TaskController
 {
-   public function index()
-   {
-      $tasks = Task::getAllTasks();
+   private $taskModel;
 
-      include $_SERVER['DOCUMENT_ROOT'] . '/app/views/tasks.php';
+   public function __construct()
+   {
+      $this->taskModel = new Task();
+   }
+
+   public function index($page)
+   {
+      $tasks = $this->taskModel->getAllTasks();
+      $totalTaskCount = count($tasks);
+
+      $adapter = new ArrayAdapter($tasks);
+      $pagerfanta = new Pagerfanta($adapter);
+      $pagerfanta->setMaxPerPage(TASKS_PER_PAGE);
+      $pagerfanta->setCurrentPage($page);
+
+      $pagerfantaView = new TwitterBootstrap5View();
+      $pagerHtml = $pagerfantaView->render($pagerfanta, function ($page) {
+         return '?page=' . $page;
+      });
+
+      $tasks = $pagerfanta->getCurrentPageResults();
+
+
+
+      require $_SERVER['DOCUMENT_ROOT'] . '/app/views/tasks.php';
    }
 
    public function create()
    {
       if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-         // Получение данных из формы
-         $username = $_POST['username'];
+         $name = $_POST['username'];
          $email = $_POST['email'];
-         $task = $_POST['task'];
+         $taskText = $_POST['task'];
 
-         // Валидация данных (можно добавить дополнительные проверки)
+         $this->taskModel->create($name, $email, $taskText);
 
-         // Создание новой задачи
-         $newTask = new Task();
-         $newTask->username = $username;
-         $newTask->email = $email;
-         $newTask->task = $task;
-         $newTask->save();
-
-         // Редирект на страницу со списком задач
          header('Location: /');
-         exit();
+         exit;
       }
 
-      header('Location: /create');
+      require $_SERVER['DOCUMENT_ROOT'] . '/app/views/create_task.php';
    }
 
    public function edit($id)
    {
-      $task = Task::getTaskById($id);
-
       if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-         // Получение данных из формы
          $username = $_POST['username'];
          $email = $_POST['email'];
-         $taskText = $_POST['task'];
+         $task = $_POST['task'];
+         $completed = $_POST['completed'] ? 1 : 0;
 
-         // Валидация данных (можно добавить дополнительные проверки)
+         $this->taskModel->update($id, $username, $email, $task, $completed);
 
-         // Обновление задачи
-         $task->username = $username;
-         $task->email = $email;
-         $task->task = $taskText;
-         $task->save();
-
-         // Редирект на страницу со списком задач
          header('Location: /');
-         exit();
+         exit;
       }
 
-      header('Location: /edit');
+      $task = $this->taskModel->getById($id);
+
+      require $_SERVER['DOCUMENT_ROOT'] . '/app/views/edit_task.php';
    }
 
    public function delete($id)
    {
-      $task = Task::getTaskById($id);
+      $this->taskModel->delete($id);
 
-      if ($task) {
-         $task->delete();
-      }
-
-      // Редирект на страницу со списком задач
       header('Location: /');
-      exit();
+      exit;
    }
 }

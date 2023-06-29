@@ -27,6 +27,5 @@ class CreateSessionsTable
    }
 }
 
-// Создание таблицы
 $table = new CreateSessionsTable();
 $table->up();
