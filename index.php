@@ -1,7 +1,10 @@
 <?php
 
+<<<<<<< HEAD
 session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/config/config.php';
+=======
+>>>>>>> f0f4f554bac542988dcc948bc0a509bbb3299f42
 require_once $_SERVER['DOCUMENT_ROOT'] . '/app/controllers/AuthController.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/app/controllers/TaskController.php';
 
